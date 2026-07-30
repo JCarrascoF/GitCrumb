@@ -7,7 +7,8 @@ from datetime import datetime
 from pathlib import Path
 from string import Template
 
-from gitrack.models import RepoResult
+from gitcrumb.i18n import t
+from gitcrumb.models import RepoResult
 
 _DEFAULT_TEMPLATE_PATH = Path(__file__).parent / "report_template.md"
 _REPO_BLOCK_START = "<!-- #repo_block -->"
@@ -34,8 +35,8 @@ def _load_templates() -> tuple[Template, str]:
     return Template(report_body), repo_block
 
 
-_GITRACK_HASH_PREFIX = "<!-- gitrack-hash: "
-_GITRACK_HASH_SUFFIX = ' -->\n'
+_GITCRUMB_HASH_PREFIX = "<!-- gitcrumb-hash: "
+_GITCRUMB_HASH_SUFFIX = ' -->\n'
 
 
 def _content_hash(text: str) -> str:
@@ -44,16 +45,16 @@ def _content_hash(text: str) -> str:
 
 
 def read_existing_hash(path: Path) -> str | None:
-    """Read the embedded gitrack hash from an existing file, or None."""
+    """Read the embedded gitcrumb hash from an existing file, or None."""
     # splitlines() strips \n, so match against ' -->' (without newline)
     _SUFFIX_MATCH = " -->"
     try:
         for line in reversed(path.read_text(encoding="utf-8").splitlines()):
             stripped = line.strip()
-            if stripped.startswith(_GITRACK_HASH_PREFIX) and stripped.endswith(
+            if stripped.startswith(_GITCRUMB_HASH_PREFIX) and stripped.endswith(
                 _SUFFIX_MATCH
             ):
-                return stripped[len(_GITRACK_HASH_PREFIX):-len(_SUFFIX_MATCH)]
+                return stripped[len(_GITCRUMB_HASH_PREFIX):-len(_SUFFIX_MATCH)]
     except (FileNotFoundError, OSError):
         pass
     return None
@@ -66,12 +67,12 @@ def write_report(path: Path, content_body: str, new_hash: str) -> bool:
     existing_hash = read_existing_hash(path)
 
     if existing_hash == new_hash:
-        print(f"\nContenido sin cambios (hash {new_hash}). Saltando escritura del MD.")
+        print(t("report.skipped", h=new_hash))
         return False
 
     full_content = (
         content_body + "\n"
-        + _GITRACK_HASH_PREFIX + new_hash + _GITRACK_HASH_SUFFIX
+        + _GITCRUMB_HASH_PREFIX + new_hash + _GITCRUMB_HASH_SUFFIX
     )
     path.write_text(full_content, encoding="utf-8")
     return True
@@ -134,7 +135,7 @@ def generate_report_md(
 
     # Render template
     content = tpl.substitute(
-        report_title="Informe de Actividad Git — Período Laboral",
+        report_title=t("report.title"),
         authors_displayed=author,
         analysis_date_range=f"{start_date} → {end_date}",
         report_generated_at=now,

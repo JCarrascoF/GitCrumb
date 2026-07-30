@@ -1,24 +1,24 @@
-# Arquitectura de gitrack
+# Arquitectura de gitcrumb
 
 ## Arquitectura general
 
 Script plano sin dependencias externas (solo stdlib). Flujo lineal: **configuración → escaneo → extracción → generación → escritura**.
 
 ```
-_gitrack_entry.py       # entry point → gitrack.cli:main()
-gitrack/cli.py      # argparse + orquestación del flujo
-gitrack/config.py   # prompt interactivo + resolución de configuración
-gitrack/models.py   # dataclasses: Commit, RepoResult (con merge_hashes)
-gitrack/git_parser.py       # subprocess → git log / git shortstat
-gitrack/repo_analyzer.py    # find repos + analyze_repositories
-gitrack/report.py           # generación Markdown desde template + hash
-gitrack/docker_export.py    # Docker + Marp CLI (exportación PDF)
+_gitcrumb_entry.py       # entry point → gitcrumb.cli:main()
+gitcrumb/cli.py      # argparse + orquestación del flujo
+gitcrumb/config.py   # prompt interactivo + resolución de configuración
+gitcrumb/models.py   # dataclasses: Commit, RepoResult (con merge_hashes)
+gitcrumb/git_parser.py       # subprocess → git log / git shortstat
+gitcrumb/repo_analyzer.py    # find repos + analyze_repositories
+gitcrumb/report.py           # generación Markdown desde template + hash
+gitcrumb/docker_export.py    # Docker + Marp CLI (exportación PDF)
 ```
 
 Archivos de plantilla:
 
 ```
-gitrack/report_template.md  # template único: informe + bloque inline
+gitcrumb/report_template.md  # template único: informe + bloque inline
 TEMPLATE_REFERENCE.md   # documentación de variables disponibles
 ```
 
@@ -111,7 +111,7 @@ Ver [TEMPLATE_REFERENCE.md](../TEMPLATE_REFERENCE.md) para la referencia complet
 
 #### Hash de contenido
 
-Incluye hash SHA-256 embebido en comentario HTML (`<!-- gitrack-hash: ... -->`) al final del archivo. Si el hash coincide con una ejecución anterior, se salta la reescritura.
+Incluye hash SHA-256 embebido en comentario HTML (`<!-- gitcrumb-hash: ... -->`) al final del archivo. Si el hash coincide con una ejecución anterior, se salta la reescritura.
 
 ### Gestión de merge commits
 

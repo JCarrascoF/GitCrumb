@@ -13,7 +13,7 @@ import unittest
 from io import StringIO
 import sys
 
-from gitrack.models import Commit, RepoResult
+from gitcrumb.models import Commit, RepoResult
 
 
 class TestReportNoMerges(unittest.TestCase):
@@ -86,7 +86,7 @@ class TestReportNoMerges(unittest.TestCase):
 
     def test_header_matches_table_when_no_merges(self):
         """Header commit count must equal table row count with --no-merges."""
-        from gitrack.report import generate_report_md
+        from gitcrumb.report import generate_report_md
 
         repo = self._make_repo_with_excluded_merges()
         warnings = self._capture_warnings(
@@ -101,7 +101,7 @@ class TestReportNoMerges(unittest.TestCase):
 
         Reproduces the exact case from terraform-modules:
           total=2, merges=15 → header showed -13 commits (BUG)"""
-        from gitrack.report import generate_report_md
+        from gitcrumb.report import generate_report_md
 
         repo = RepoResult(
             name="terraform-modules",
@@ -128,7 +128,7 @@ class TestReportNoMerges(unittest.TestCase):
 
     def test_header_zero_when_all_commits_are_merges(self):
         """When all commits are merges and excluded, header shows 0."""
-        from gitrack.report import generate_report_md
+        from gitcrumb.report import generate_report_md
 
         repo = self._make_repo_all_merges_excluded()
         content, _ = generate_report_md([repo], "test@user.com", "2025-01-01",
@@ -142,7 +142,7 @@ class TestReportNoMerges(unittest.TestCase):
 
     def test_table_rows_equal_header_when_no_merges(self):
         """Count table rows and verify they match the header count."""
-        from gitrack.report import generate_report_md
+        from gitcrumb.report import generate_report_md
 
         repo = self._make_repo_with_excluded_merges()
         content, _ = generate_report_md([repo], "test@user.com", "2025-01-01",
@@ -171,7 +171,7 @@ class TestReportNoMerges(unittest.TestCase):
 
     def test_no_warnings_for_excluded_merges(self):
         """No [WARN] lines should be printed when --no-merges excludes merges."""
-        from gitrack.report import generate_report_md
+        from gitcrumb.report import generate_report_md
 
         repos = [
             self._make_repo_with_excluded_merges(),
@@ -194,7 +194,7 @@ class TestReportNoMerges(unittest.TestCase):
 
     def test_mark_merges_header_shows_total(self):
         """With mark_merges=True, header should show total commits including merges."""
-        from gitrack.report import generate_report_md
+        from gitcrumb.report import generate_report_md
 
         repo = self._make_repo_with_merges_included()
         content, _ = generate_report_md([repo], "test@user.com", "2025-01-01",
@@ -208,7 +208,7 @@ class TestReportNoMerges(unittest.TestCase):
 
     def test_mark_merges_table_excludes_merge_rows(self):
         """With mark_merges=True, table includes ALL rows (merges marked)."""
-        from gitrack.report import generate_report_md
+        from gitcrumb.report import generate_report_md
 
         repo = self._make_repo_with_merges_included()
         content, _ = generate_report_md([repo], "test@user.com", "2025-01-01",

@@ -10,8 +10,8 @@ import unittest
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-from gitrack.models import Commit, RepoResult
-from gitrack.report import read_existing_hash, write_report, generate_report_md
+from gitcrumb.models import Commit, RepoResult
+from gitcrumb.report import read_existing_hash, write_report, generate_report_md
 
 
 class TestHashRoundTrip(unittest.TestCase):

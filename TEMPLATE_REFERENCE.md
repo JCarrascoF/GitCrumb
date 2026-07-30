@@ -1,12 +1,12 @@
-# gitrack — Referencia de plantillas (templates)
+# gitcrumb — Referencia de plantillas (templates)
 
-El fichero `gitrack/report_template.md` define el formato completo del informe generado.
+El fichero `gitcrumb/report_template.md` define el formato completo del informe generado.
 Se aplica automáticamente en cada ejecución. Puedes modificarlo directamente
 para personalizar el aspecto del informe.
 
 ## Estructura del archivo
 
-Todo está en un solo fichero (`gitrack/report_template.md`). El template por repositorio
+Todo está en un solo fichero (`gitcrumb/report_template.md`). El template por repositorio
 se define inline entre marcadores especiales, en la posición donde se expandirán
 los bloques de cada repositorio:
 

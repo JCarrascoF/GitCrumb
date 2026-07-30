@@ -1,7 +1,7 @@
 """Tests para models.py — dataclasses Commit y RepoResult."""
 
 import unittest
-from gitrack.models import Commit, RepoResult
+from gitcrumb.models import Commit, RepoResult
 
 
 class TestCommit(unittest.TestCase):

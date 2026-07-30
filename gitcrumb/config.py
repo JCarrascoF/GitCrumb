@@ -6,16 +6,18 @@ import os
 import sys
 from pathlib import Path
 
+from gitcrumb.i18n import t
+
 
 # =============================================================================
 # 1. INTERACTIVE PROMPT WITH DEFAULTS
 # =============================================================================
 
 _DEFAULT_KEYS = [
-    ("ROOT_DIR", "Carpeta raíz a escanear", lambda: os.path.expanduser("~/Desarrollo")),
-    ("AUTHOR", "Nombre o email del autor en Git", "your@email.com"),
-    ("START_DATE", "Fecha de inicio (YYYY-MM-DD)", "2026-01-01"),
-    ("END_DATE", "Fecha de fin (YYYY-MM-DD)", "2026-07-27"),
+    ("ROOT_DIR", "config.label.root_dir", lambda: os.path.expanduser("~/Desarrollo")),
+    ("AUTHOR", "config.label.author", "your@email.com"),
+    ("START_DATE", "config.label.start_date", "2026-01-01"),
+    ("END_DATE", "config.label.end_date", "2026-07-27"),
 ]
 
 
@@ -36,16 +38,16 @@ def prompt_interactive(cli_args: dict[str, str]) -> dict[str, str]:
     if not pending:
         return {}
 
-    print("\n⚙  Configuración interactiva (Enter = aceptar default)\n")
+    print(t("config.header"))
     result: dict[str, str] = {}
-    for key, label, default in pending:
+    for key, label_key, default in pending:
         if callable(default):
             default = default()
-        prompt = f"  {label} [{default}]: "
+        prompt = f"  {t(label_key)} [{default}]: "
         try:
             value = input(prompt).strip()
         except KeyboardInterrupt:
-            print("\n\n⚠  Cancelado por el usuario.")
+            print(t("cli.cancelled"))
             sys.exit(0)
         result[key] = value if value else str(default)
     print()
@@ -79,7 +81,7 @@ def resolve_config(
     cli_args = cli_args or {}
     config: dict[str, str] = {}
 
-    for key, _label, default in _DEFAULT_KEYS:
+    for key, _label_key, default in _DEFAULT_KEYS:
         # 1) CLI argument
         if key in cli_args:
             config[key] = cli_args[key]

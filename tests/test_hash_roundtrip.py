@@ -23,18 +23,18 @@ class TestHashRoundTrip(unittest.TestCase):
         """Caso mínimo: escribir un hash y leerlo de vuelta.
 
         El archivo contiene una línea como:
-            <!-- gitrack-hash: abc123def456 -->
+            <!-- gitcrumb-hash: abc123def456 -->
         (sin \n al final porque splitlines() lo quita).
 
         read_existing_hash debe devolver 'abc123def456'."""
         with NamedTemporaryFile(mode="w", suffix=".md", delete=False) as f:
             # Simula exactamente lo que write_report produce (splitlines lo lee sin \n):
             f.write("# Content\n")
-            f.write("<!-- gitrack-hash: abc123def456 -->\n")
+            f.write("<!-- gitcrumb-hash: abc123def456 -->\n")
             path = Path(f.name)
 
         try:
-            from gitrack.report import read_existing_hash
+            from gitcrumb.report import read_existing_hash
             result = read_existing_hash(path)
             self.assertIsNotNone(result, "read_existing_hash returned None — el hash no se leyó")
             self.assertEqual(result, "abc123def456")
@@ -46,11 +46,11 @@ class TestHashRoundTrip(unittest.TestCase):
         with NamedTemporaryFile(mode="w", suffix=".md", delete=False) as f:
             # Escribe manualmente lo que write_report produciría:
             f.write("# Original\n")
-            f.write("<!-- gitrack-hash: samehash -->\n")
+            f.write("<!-- gitcrumb-hash: samehash -->\n")
             path = Path(f.name)
 
         try:
-            from gitrack.report import write_report
+            from gitcrumb.report import write_report
             written = write_report(path, "# New body", "samehash")
             self.assertFalse(written, "write_report reescribió aunque el hash coincidía")
         finally:

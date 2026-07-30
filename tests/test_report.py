@@ -4,8 +4,8 @@ import unittest
 import tempfile
 from pathlib import Path
 
-from gitrack.models import Commit, RepoResult
-from gitrack.report import (
+from gitcrumb.models import Commit, RepoResult
+from gitcrumb.report import (
     _content_hash,
     read_existing_hash,
     write_report,
@@ -35,7 +35,7 @@ class TestReadExistingHash(unittest.TestCase):
         with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False) as f:
             f.write("# Title\n")
             f.write("Some content\n")
-            f.write("<!-- gitrack-hash: abc123def456 -->\n")
+            f.write("<!-- gitcrumb-hash: abc123def456 -->\n")
             path = Path(f.name)
 
         try:
@@ -69,14 +69,14 @@ class TestWriteReport(unittest.TestCase):
             self.assertTrue(written)
             content = path.read_text(encoding="utf-8")
             self.assertIn("# Content", content)
-            self.assertIn("<!-- gitrack-hash: hash123 -->", content)
+            self.assertIn("<!-- gitcrumb-hash: hash123 -->", content)
         finally:
             path.unlink(missing_ok=True)
 
     def test_skips_when_hash_matches(self):
         with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False) as f:
             f.write("# Old\n")
-            f.write("<!-- gitrack-hash: samehash -->\n")
+            f.write("<!-- gitcrumb-hash: samehash -->\n")
             path = Path(f.name)
 
         try:
@@ -105,18 +105,18 @@ class TestGenerateReportMd(unittest.TestCase):
             results, "test@dev.com", "2025-01-01", "2025-12-31", "/tmp/root"
         )
 
-        self.assertIn("# Informe de Actividad Git — Período Laboral", content)
-        self.assertIn("**Autor**: test@dev.com", content)
-        self.assertIn("**Rango de fechas**: 2025-01-01 → 2025-12-31", content)
+        self.assertIn("# Git Activity Report — Employment Period", content)
+        self.assertIn("**Author**: test@dev.com", content)
+        self.assertIn("**Date range**: 2025-01-01 → 2025-12-31", content)
         self.assertIn("## `repo-a`", content)
         self.assertIn("---", content)
-        self.assertIn("## Resumen Ejecutivo", content)
+        self.assertIn("## Executive Summary", content)
         # Summary appears before repo blocks
-        summary_pos = content.index("## Resumen Ejecutivo")
+        summary_pos = content.index("## Executive Summary")
         repo_pos = content.index("## `repo-a`")
         self.assertLess(summary_pos, repo_pos)
-        self.assertIn("- **Repositorios activos**: 1", content)
-        self.assertIn("- **Total de commits**: 2", content)
+        self.assertIn("- **Active repositories**: 1", content)
+        self.assertIn("- **Total commits**: 2", content)
 
     def test_repos_sorted_alphabetically(self):
         results = [
@@ -169,18 +169,18 @@ class TestGenerateReportMd(unittest.TestCase):
         content, _ = generate_report_md(
             results, "author", "2025-01-01", "2025-12-31", "/tmp/root"
         )
-        self.assertIn("- **Repositorios activos**: 2", content)
-        self.assertIn("- **Total de commits**: 10", content)
-        self.assertIn("- **Líneas añadidas**: 300", content)
-        self.assertIn("- **Líneas eliminadas**: 130", content)
+        self.assertIn("- **Active repositories**: 2", content)
+        self.assertIn("- **Total commits**: 10", content)
+        self.assertIn("- **Lines added**: 300", content)
+        self.assertIn("- **Lines deleted**: 130", content)
 
     def test_empty_results(self):
         content, _ = generate_report_md(
             [], "author", "2025-01-01", "2025-12-31", "/tmp/root"
         )
-        self.assertIn("# Informe de Actividad Git — Período Laboral", content)
-        self.assertIn("- **Repositorios activos**: 0", content)
-        self.assertIn("- **Total de commits**: 0", content)
+        self.assertIn("# Git Activity Report — Employment Period", content)
+        self.assertIn("- **Active repositories**: 0", content)
+        self.assertIn("- **Total commits**: 0", content)
 
     def test_hash_is_stable(self):
         """El hash no incluye la marca de tiempo → contenido estable."""

@@ -1,4 +1,4 @@
-"""Punto de entrada — argparse y orquestación del flujo."""
+"""Entry point — argparse and flow orchestration."""
 
 from __future__ import annotations
 
@@ -6,55 +6,56 @@ import argparse
 import sys
 from pathlib import Path
 
-from gitrack.config import resolve_config, _CLI_MAP
-from gitrack.docker_export import MARP_IMAGE, check_docker, ensure_image, export_pdf
-from gitrack.repo_analyzer import analyze_repositories
-from gitrack.report import generate_report_md, write_report
+from gitcrumb.config import resolve_config, _CLI_MAP
+from gitcrumb.docker_export import MARP_IMAGE, check_docker, ensure_image, export_pdf
+from gitcrumb.i18n import t
+from gitcrumb.repo_analyzer import analyze_repositories
+from gitcrumb.report import generate_report_md, write_report
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Informe de actividad Git en ventana temporal.",
+        description=t("cli.description"),
     )
     parser.add_argument(
         "path", nargs="?", default=None,
-        help="Carpeta raíz a escanear (posicional o --path).",
+        help=t("cli.path.help"),
     )
     parser.add_argument(
         "--non-interactive", action="store_true",
-        help="No pedir valores interactivamente (usa defaults).",
+        help=t("cli.non-interactive.help"),
     )
     parser.add_argument(
         "--pdf", action="store_true",
-        help=f"Exportar el informe Markdown a PDF vía Docker ({MARP_IMAGE}).",
+        help=t("cli.pdf.help", image=MARP_IMAGE),
     )
     parser.add_argument(
         "--author", dest="author", action="append",
-        help="Nombre o email del autor en Git. Repetible para varios autores.",
+        help=t("cli.author.help"),
     )
     parser.add_argument(
         "--start", dest="start",
-        help="Fecha de inicio YYYY-MM-DD (START_DATE).",
+        help=t("cli.start.help"),
     )
     parser.add_argument(
         "--end", dest="end",
-        help="Fecha de fin YYYY-MM-DD (END_DATE).",
+        help=t("cli.end.help"),
     )
     parser.add_argument(
         "--output", dest="output",
-        help="Ruta del archivo de salida (OUTPUT_FILE).",
+        help=t("cli.output.help"),
     )
     parser.add_argument(
         "--no-merges", action="store_true",
-        help="Excluir merge commits del listado (solo código propio).",
+        help=t("cli.no-merges.help"),
     )
     parser.add_argument(
         "--debug", action="store_true",
-        help="Mostrar desglose por autor y repo para depuración.",
+        help=t("cli.debug.help"),
     )
     parser.add_argument(
         "--mark-merges", action="store_true",
-        help="Marcar merge commits con (Merge) en la tabla.",
+        help=t("cli.mark-merges.help"),
     )
     args = parser.parse_args()
 
@@ -77,14 +78,14 @@ def main() -> None:
 
     root_path = Path(root_dir).expanduser()
     if not root_path.is_dir():
-        print(f"ERROR: La carpeta raíz no existe: {root_path}", file=sys.stderr)
+        print(t("cli.error.root_missing", path=root_path), file=sys.stderr)
         sys.exit(1)
 
     # Ensure parent directory of output file exists
     Path(output_file).parent.mkdir(parents=True, exist_ok=True)
 
-    print(f"Iniciando escaneo en: {root_path}")
-    print(f"Autor(es): {author_display} | Rango: {start_date} → {end_date}\n")
+    print(t("cli.scanning", path=root_path))
+    print(t("cli.author_range", authors=author_display, start=start_date, end=end_date))
 
     results = analyze_repositories(
         root_dir, author_list, start_date, end_date,
@@ -96,29 +97,29 @@ def main() -> None:
         mark_merges=args.mark_merges,
     )
     output_path = Path(output_file)
-    written = write_report(output_path, content_body, new_hash)
+    write_report(output_path, content_body, new_hash)
 
     total_repos = len(results)
     total_commits = sum(r.total for r in results)
     total_added = sum(r.added for r in results)
     total_deleted = sum(r.deleted for r in results)
 
-    print(f"\nInforme Markdown generado: {output_file}")
-    print(f"Repositorios activos: {total_repos} | Commits totales: {total_commits}")
-    print(f"Líneas añadidas: {total_added} | Eliminadas: {total_deleted}")
+    print(t("cli.report_generated", path=output_file))
+    print(t("cli.summary.repos_commits", repos=total_repos, commits=total_commits))
+    print(t("cli.summary.lines", added=total_added, deleted=total_deleted))
 
     # Export to PDF if requested
     if args.pdf:
         if not check_docker():
-            print("\n⚠  Docker no está disponible. Instálalo en https://www.docker.com/products/docker-desktop")
+            print(t("cli.docker.unavailable"))
             sys.exit(1)
         if not ensure_image(MARP_IMAGE):
             sys.exit(1)
         pdf_path = export_pdf(output_file)
         if pdf_path:
-            print(f"PDF generado: {pdf_path}")
+            print(t("cli.pdf.generated", path=pdf_path))
         else:
-            print("\n⚠  Error al generar el PDF.", file=sys.stderr)
+            print(t("cli.pdf.error"), file=sys.stderr)
             sys.exit(1)
 
 
@@ -126,5 +127,5 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\n\n⚠  Cancelado por el usuario.")
+        print(t("cli.cancelled"))
         sys.exit(0)

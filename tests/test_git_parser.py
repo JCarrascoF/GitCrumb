@@ -4,8 +4,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-from gitrack.models import Commit
-from gitrack.git_parser import _parse_log, extract_commits, extract_stats
+from gitcrumb.models import Commit
+from gitcrumb.git_parser import _parse_log, extract_commits, extract_stats
 
 
 class TestParseLog(unittest.TestCase):
@@ -37,7 +37,7 @@ class TestParseLog(unittest.TestCase):
 
 class TestExtractCommits(unittest.TestCase):
 
-    @patch("gitrack.git_parser._git_log")
+    @patch("gitcrumb.git_parser._git_log")
     def test_deduplication_by_hash(self, mock_git_log):
         """Commits con el mismo hash no se duplican."""
         shared = Commit("dup1", "2025-03-01", "Shared commit")
@@ -58,7 +58,7 @@ class TestExtractCommits(unittest.TestCase):
         self.assertIn("dup1", hashes)
         self.assertIn("a1", hashes)
 
-    @patch("gitrack.git_parser._git_log")
+    @patch("gitcrumb.git_parser._git_log")
     def test_merge_detection(self, mock_git_log):
         """Los merges se detectan y cuentan correctamente."""
         regular = Commit("r1", "2025-03-01", "Regular commit")
@@ -75,7 +75,7 @@ class TestExtractCommits(unittest.TestCase):
         self.assertEqual(merge_count, 1)
         self.assertIn("m1", merge_hashes)
 
-    @patch("gitrack.git_parser._git_log")
+    @patch("gitcrumb.git_parser._git_log")
     def test_exclude_merges(self, mock_git_log):
         """Cuando exclude_merges=True, los merges no aparecen en el resultado."""
         regular = Commit("r1", "2025-03-01", "Regular commit")
@@ -94,7 +94,7 @@ class TestExtractCommits(unittest.TestCase):
         # merge_count sigue reflejando merges encontrados
         self.assertEqual(merge_count, 1)
 
-    @patch("gitrack.git_parser._git_log")
+    @patch("gitcrumb.git_parser._git_log")
     def test_no_commits(self, mock_git_log):
         mock_git_log.return_value = []
         commits, mc, mh = extract_commits(
@@ -107,7 +107,7 @@ class TestExtractCommits(unittest.TestCase):
 
 class TestExtractStats(unittest.TestCase):
 
-    @patch("gitrack.git_parser.subprocess.run")
+    @patch("gitcrumb.git_parser.subprocess.run")
     def test_parses_insertions_and_deletions(self, mock_run):
         mock_result = MagicMock()
         mock_result.returncode = 0
@@ -123,7 +123,7 @@ class TestExtractStats(unittest.TestCase):
         self.assertEqual(added, 160)
         self.assertEqual(deleted, 42)
 
-    @patch("gitrack.git_parser.subprocess.run")
+    @patch("gitcrumb.git_parser.subprocess.run")
     def test_zero_stats(self, mock_run):
         mock_result = MagicMock()
         mock_result.returncode = 0
@@ -136,7 +136,7 @@ class TestExtractStats(unittest.TestCase):
         self.assertEqual(added, 0)
         self.assertEqual(deleted, 0)
 
-    @patch("gitrack.git_parser.subprocess.run")
+    @patch("gitcrumb.git_parser.subprocess.run")
     def test_git_error_returns_zero(self, mock_run):
         mock_result = MagicMock()
         mock_result.returncode = 1
@@ -148,7 +148,7 @@ class TestExtractStats(unittest.TestCase):
         self.assertEqual(added, 0)
         self.assertEqual(deleted, 0)
 
-    @patch("gitrack.git_parser.subprocess.run")
+    @patch("gitcrumb.git_parser.subprocess.run")
     def test_multiple_authors_summed(self, mock_run):
         """Stats de múltiples autores se suman."""
         results = [

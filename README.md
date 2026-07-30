@@ -1,4 +1,6 @@
-# gitrack
+[English](README.en.md)
+
+# GitCrumb
 
 Genera un informe de actividad Git a partir del historial de commits en una ventana temporal. Escanea recursivamente una carpeta raíz, extrae los commits por autor y produce un archivo **Markdown** con estructura formal: encabezado, tablas por repositorio y resumen ejecutivo. Opcionalmente exporta a **PDF**.
 
@@ -14,9 +16,9 @@ Genera un informe de actividad Git a partir del historial de commits en una vent
 ### Post-clonación
 
 ```bash
-git clone git@github.com:<user>/gitrack.git
-cd gitrack
-./install.sh              # crea el alias global "gitrack"
+git clone git@github.com:<user>/gitcrumb.git
+cd gitcrumb
+./install.sh              # crea el alias global "gitcrumb"
 ```
 
 El script verifica que `~/.local/bin` esté en PATH y crea un symlink automático.
@@ -24,32 +26,32 @@ El script verifica que `~/.local/bin` esté en PATH y crea un symlink automátic
 ### Manual (sin install.sh)
 
 ```bash
-ln -sf $(pwd)/_gitrack_entry.py ~/.local/bin/gitrack
+ln -sf $(pwd)/_gitcrumb_entry.py ~/.local/bin/gitcrumb
 ```
 
 ## Uso rápido
 
 ```bash
 # Modo interactivo → genera informe .md
-gitrack
+gitcrumb
 
 # Path como argumento posicional + parámetros CLI
-gitrack ~/Dev --author "your@email.com" --start 2026-01-01 --end 2026-07-27
+gitcrumb ~/Dev --author "your@email.com" --start 2026-01-01 --end 2026-07-27
 
 # Con exportación a PDF (requiere Docker)
-gitrack ~/Dev --pdf
+gitcrumb ~/Dev --pdf
 
 # Sin prompts (usa defaults) — útil en CI / scripts
-gitrack --non-interactive
+gitcrumb --non-interactive
 
 # Múltiples autores + excluir merges de la tabla
-gitrack ~/Dev --author "your@email.com" --author "JaneDoe" --no-merges
+gitcrumb ~/Dev --author "your@email.com" --author "JaneDoe" --no-merges
 
 # Marcar merge commits con (Merge) en la tabla
-gitrack ~/Dev --mark-merges
+gitcrumb ~/Dev --mark-merges
 
 # Depuración: desglose por autor y repo
-gitrack ~/Dev --debug
+gitcrumb ~/Dev --debug
 ```
 
 ## Configuración
@@ -69,7 +71,7 @@ Los parámetros se pasan como argumentos CLI. Si no se indican, el script pregun
 
 ## Estructura del informe generado (Markdown)
 
-El formato se define en `gitrack/report_template.md` y puede personalizarse editando ese fichero:
+El formato se define en `gitcrumb/report_template.md` y puede personalizarse editando ese fichero:
 
 ```markdown
 # Informe de Actividad Git — Período Laboral
@@ -100,7 +102,7 @@ El formato se define en `gitrack/report_template.md` y puede personalizarse edit
 ## Exportación a PDF
 
 ```bash
-gitrack --pdf   # requiere Docker (usa la imagen marpteam/marp-cli)
+gitcrumb --pdf   # requiere Docker (usa la imagen marpteam/marp-cli)
 ```
 
 Genera un archivo `.pdf` con el mismo nombre que el Markdown, en la misma ubicación. La conversión se ejecuta dentro de un contenedor Docker — no se instala nada en el host.
@@ -112,7 +114,7 @@ Genera un archivo `.pdf` con el mismo nombre que el Markdown, en la misma ubicac
 3. **Escaneo** — Busca recursivamente todos los directorios `.git` dentro de `--path`, respetando `.gitignore` del repositorio ancestro más cercano.
 4. **Extracción** — Ejecuta `git log` por cada repositorio, filtrando por autor y rango de fechas. Una consulta separada por autor (evita regex OR) y dos pasadas (`--no-merges` + `--merges`) para distinguir commits propios de merges.
 5. **Filtrado** — Solo incluye en el informe los repositorios con commits en el periodo.
-6. **Generación** — Construye el Markdown desde `gitrack/report_template.md` con encabezado, resumen ejecutivo y tablas por repo (ordenados alfabéticamente).
+6. **Generación** — Construye el Markdown desde `gitcrumb/report_template.md` con encabezado, resumen ejecutivo y tablas por repo (ordenados alfabéticamente).
 7. **Escritura** — Guarda `.md` en `--output`. Si el contenido no ha cambiado respecto a una ejecución anterior (verificado por hash SHA-256), se salta la reescritura.
 8. **Exportación PDF** *(opcional)* — Convierte a PDF vía Docker + Marp si se pasa `--pdf`.
 

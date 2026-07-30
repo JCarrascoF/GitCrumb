@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from gitcrumb.i18n import t
+
 
 MARP_IMAGE = "marpteam/marp-cli"
 
@@ -28,12 +30,12 @@ def ensure_image(image: str) -> bool:
     if inspect.returncode == 0:
         return True
 
-    print(f"Descargando imagen {image}...")
+    print(t("docker.pulling", image=image))
     result = subprocess.run(
         ["docker", "pull", image], capture_output=True, text=True, timeout=300,
     )
     if result.returncode != 0:
-        print(f"Error al descargar la imagen: {result.stderr.strip()}", file=sys.stderr)
+        print(t("docker.pull_error", err=result.stderr.strip()), file=sys.stderr)
         return False
     return True
 
@@ -79,7 +81,7 @@ def export_pdf(md_path: str) -> str | None:
     marp_path.write_text(_MARP_FRONTMATTER + md_text, encoding="utf-8")
 
     try:
-        print("Generando PDF con Marp...")
+        print(t("docker.generating"))
         cmd = [
             "docker", "run", "--rm",
             "-v", f"{mount_dir}:/home/marp/app:z",
@@ -96,7 +98,7 @@ def export_pdf(md_path: str) -> str | None:
             return str(pdf_path)
 
         stderr = result.stderr.decode(errors="replace").strip()
-        print(f"Error de Marp: {stderr}", file=sys.stderr)
+        print(t("docker.marp_error", err=stderr), file=sys.stderr)
         return None
     finally:
         marp_path.unlink(missing_ok=True)

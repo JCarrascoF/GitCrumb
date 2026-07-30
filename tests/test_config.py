@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from gitrack.config import _default_output, resolve_config
+from gitcrumb.config import _default_output, resolve_config
 
 
 class TestDefaultOutput(unittest.TestCase):
@@ -21,7 +21,7 @@ class TestDefaultOutput(unittest.TestCase):
 class TestResolveConfig(unittest.TestCase):
 
     def test_cli_args_take_precedence(self):
-        with patch("gitrack.config.sys.stdin.isatty", return_value=False):
+        with patch("gitcrumb.config.sys.stdin.isatty", return_value=False):
             cfg = resolve_config(
                 non_interactive=True,
                 cli_args={
@@ -35,7 +35,7 @@ class TestResolveConfig(unittest.TestCase):
         self.assertEqual(cfg["END_DATE"], "2024-06-30")
 
     def test_defaults_when_no_args(self):
-        with patch("gitrack.config.sys.stdin.isatty", return_value=False):
+        with patch("gitcrumb.config.sys.stdin.isatty", return_value=False):
             cfg = resolve_config(non_interactive=True, cli_args={})
         self.assertIn("ROOT_DIR", cfg)
         self.assertIn("START_DATE", cfg)
@@ -43,7 +43,7 @@ class TestResolveConfig(unittest.TestCase):
         self.assertIn("OUTPUT_FILE", cfg)
 
     def test_output_file_derived(self):
-        with patch("gitrack.config.sys.stdin.isatty", return_value=False):
+        with patch("gitcrumb.config.sys.stdin.isatty", return_value=False):
             cfg = resolve_config(
                 non_interactive=True,
                 cli_args={
@@ -55,7 +55,7 @@ class TestResolveConfig(unittest.TestCase):
         self.assertEqual(cfg["OUTPUT_FILE"], "/tmp/test/git_report_2025-06-01_2025-06-30.md")
 
     def test_output_file_cli_overrides_derived(self):
-        with patch("gitrack.config.sys.stdin.isatty", return_value=False):
+        with patch("gitcrumb.config.sys.stdin.isatty", return_value=False):
             cfg = resolve_config(
                 non_interactive=True,
                 cli_args={
@@ -68,7 +68,7 @@ class TestResolveConfig(unittest.TestCase):
         self.assertEqual(cfg["OUTPUT_FILE"], "/custom/output.md")
 
     def test_author_default(self):
-        with patch("gitrack.config.sys.stdin.isatty", return_value=False):
+        with patch("gitcrumb.config.sys.stdin.isatty", return_value=False):
             cfg = resolve_config(non_interactive=True, cli_args={})
         self.assertEqual(cfg["AUTHOR"], "your@email.com")
 

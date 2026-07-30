@@ -5,8 +5,9 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from gitrack.git_parser import extract_commits, extract_stats
-from gitrack.models import RepoResult
+from gitcrumb.git_parser import extract_commits, extract_stats
+from gitcrumb.i18n import t
+from gitcrumb.models import RepoResult
 
 
 def _find_git_root(repo: Path) -> Path | None:
@@ -81,7 +82,7 @@ def analyze_repositories(root_dir: str, authors: list[str], start_date: str, end
 
     for repo in repos:
         rel_name = str(repo.relative_to(Path(root_dir).expanduser()))
-        print(f"  Procesando: {rel_name} ...")
+        print(t("repo_analyzer.processing", name=rel_name))
 
         commits, merge_count, merge_hashes = extract_commits(
             repo, authors, start_date, end_date, exclude_merges, debug=debug,

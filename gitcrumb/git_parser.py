@@ -6,7 +6,8 @@ import re
 import subprocess
 from pathlib import Path
 
-from gitrack.models import Commit
+from gitcrumb.i18n import t
+from gitcrumb.models import Commit
 
 
 def _parse_log(output: str) -> list[Commit]:
@@ -57,7 +58,7 @@ def extract_commits(repo_root: Path, authors: list[str], start_date: str, end_da
             dup_count = len(batch) - new_count
             if debug:
                 label = "merges" if is_merge else "no-merges"
-                print(f"    [{author}] {label}: {new_count} nuevos ({dup_count} duplicados)")
+                print(t("git_parser.debug", author=author, label=label, new_count=new_count, dup_count=dup_count))
 
     non_merges = [c for c in all_commits.values() if c.short_hash not in merge_hashes]
     merges = [c for c in all_commits.values() if c.short_hash in merge_hashes]
