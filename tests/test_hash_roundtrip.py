@@ -1,13 +1,13 @@
 """Tests TDD: round-trip de hash en report.py.
 
-Bug original: `read_existing_hash` usaba `_GITRACK_HASH_SUFFIX[1:]` que es `'-->\n'`,
+Bug original: `read_existing_hash` usaba `_GITCRUMB_HASH_SUFFIX[1:]` que es `'-->\n'`,
 pero `splitlines()` quita los saltos de línea al iterar → `.endswith('-->\n')` nunca
 matchea y el hash leído devuelve None. Esto hacía que `write_report` reescribiera
 el archivo en cada ejecución aunque el contenido no hubiera cambiado.
 
 Rastro:
-  _GITRACK_HASH_SUFFIX = ' -->\n'
-  _GITRACK_HASH_SUFFIX[1:]    → '-->\n'   (incluye \n)
+  _GITCRUMB_HASH_SUFFIX = ' -->\n'
+  _GITCRUMB_HASH_SUFFIX[1:]    → '-->\n'   (incluye \n)
   splitlines()                 → quita \n
   stripped.endswith('-->\n')   → False siempre
 """

@@ -1,6 +1,6 @@
 """Tests de round-trip para report.py — hash escrito y leído correctamente.
 
-Bug original: `read_existing_hash` usaba `_GITRACK_HASH_SUFFIX[1:]` que incluye `\n`,
+Bug original: `read_existing_hash` usaba `_GITCRUMB_HASH_SUFFIX[1:]` que incluye `\n`,
 pero `splitlines()` quita los saltos de línea → la comparación `.endswith()` fallaba
 y el hash nunca se leía. Esto hacía que `write_report` reescribiera el archivo
 en cada ejecución aunque el contenido no hubiera cambiado.
