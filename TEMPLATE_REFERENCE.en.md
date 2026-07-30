@@ -28,7 +28,7 @@ and do not appear in the final report. The content between them defines each rep
 
 | Variable | Description | Example |
 |---|---|---|
-| `$report_title` | Document title | Git Activity Report — Employment Period |
+| `$report_title` | Document title | Git Activity Report |
 | `$authors_displayed` | Author(s) filtered in the report | your@email.com, JaneDoe |
 | `$analysis_date_range` | Analyzed date range | 2026-01-01 → 2026-07-27 |
 | `$report_generated_at` | Generation date and time | 2026-07-29 10:55:51 +0200 |

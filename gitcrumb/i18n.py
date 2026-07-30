@@ -40,7 +40,7 @@ _TRANSLATIONS: dict[str, dict[str, str]] = {
     "config.label.end_date": "End date YYYY-MM-DD",
 
     # ── Report ───────────────────────────────────────────────
-    "report.title": "Git Activity Report — Employment Period",
+    "report.title": "Git Activity Report",
     "report.skipped": "\nUnchanged content (hash {h}), skipping write.",
 
     # ── Git parser debug ─────────────────────────────────────
@@ -92,7 +92,7 @@ _ES: dict[str, str] = {
     "config.label.start_date": "Fecha de inicio YYYY-MM-DD",
     "config.label.end_date": "Fecha de fin YYYY-MM-DD",
 
-    "report.title": "Informe de Actividad Git — Período Laboral",
+    "report.title": "Informe de Actividad Git",
     "report.skipped": "\nContenido sin cambios (hash {h}). Saltando escritura del MD.",
 
     "git_parser.debug": "[{author}] {label}: {new_count} nuevos ({dup_count} duplicados)",

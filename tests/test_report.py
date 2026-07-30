@@ -105,7 +105,7 @@ class TestGenerateReportMd(unittest.TestCase):
             results, "test@dev.com", "2025-01-01", "2025-12-31", "/tmp/root"
         )
 
-        self.assertIn("# Git Activity Report — Employment Period", content)
+        self.assertIn("# Git Activity Report", content)
         self.assertIn("**Author**: test@dev.com", content)
         self.assertIn("**Date range**: 2025-01-01 → 2025-12-31", content)
         self.assertIn("## `repo-a`", content)
@@ -178,7 +178,7 @@ class TestGenerateReportMd(unittest.TestCase):
         content, _ = generate_report_md(
             [], "author", "2025-01-01", "2025-12-31", "/tmp/root"
         )
-        self.assertIn("# Git Activity Report — Employment Period", content)
+        self.assertIn("# Git Activity Report", content)
         self.assertIn("- **Active repositories**: 0", content)
         self.assertIn("- **Total commits**: 0", content)
 

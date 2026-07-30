@@ -29,7 +29,7 @@ y no aparecen en el informe final. El contenido entre ellos define el formato de
 
 | Variable | Descripción | Ejemplo |
 |---|---|---|
-| `$report_title` | Título del documento | Informe de Actividad Git — Período Laboral |
+| `$report_title` | Título del documento | Informe de Actividad Git |
 | `$authors_displayed` | Autor(es) filtrados en el informe | your@email.com, JaneDoe |
 | `$analysis_date_range` | Rango de fechas analizado | 2026-01-01 → 2026-07-27 |
 | `$report_generated_at` | Fecha y hora de generación | 2026-07-29 10:55:51 +0200 |

@@ -74,7 +74,7 @@ Los parámetros se pasan como argumentos CLI. Si no se indican, el script pregun
 El formato se define en `gitcrumb/report_template.md` y puede personalizarse editando ese fichero:
 
 ```markdown
-# Informe de Actividad Git — Período Laboral
+# Informe de Actividad Git
 
 **Autor**: your@email.com
 **Rango de fechas**: 2025-01-01 → 2025-12-31
@@ -99,13 +99,15 @@ El formato se define en `gitcrumb/report_template.md` y puede personalizarse edi
 | `e4f5a6b` | 2025-03-16 | Add user validation |
 ```
 
-## Exportación a PDF
+## Exportación a PDF *(experimental)*
 
 ```bash
 gitcrumb --pdf   # requiere Docker (usa la imagen marpteam/marp-cli)
 ```
 
 Genera un archivo `.pdf` con el mismo nombre que el Markdown, en la misma ubicación. La conversión se ejecuta dentro de un contenedor Docker — no se instala nada en el host.
+
+> **Nota:** la exportación a PDF está aún en fase de pruebas y puede no funcionar correctamente en todos los entornos.
 
 ## Flujo de ejecución
 

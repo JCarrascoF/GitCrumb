@@ -72,7 +72,7 @@ Parameters are passed as CLI arguments. If not provided, the script asks interac
 The format is defined in `gitcrumb/report_template.md` and can be customized by editing that file:
 
 ```markdown
-# Git Activity Report — Employment Period
+# Git Activity Report
 
 **Author**: your@email.com
 **Date range**: 2025-01-01 → 2025-12-31
@@ -97,13 +97,15 @@ The format is defined in `gitcrumb/report_template.md` and can be customized by 
 | `e4f5a6b` | 2025-03-16 | Add user validation |
 ```
 
-## PDF Export
+## PDF Export *(experimental)*
 
 ```bash
 gitcrumb --pdf   # requires Docker (uses marpteam/marp-cli image)
 ```
 
 Generates a `.pdf` file with the same name as the Markdown one, in the same location. The conversion runs inside a Docker container — nothing is installed on the host.
+
+> **Note:** PDF export is still under development and may not work reliably in all environments.
 
 ## Execution flow
 
