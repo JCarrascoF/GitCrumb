@@ -1,3 +1,5 @@
+[[spanish version](README.md)]
+
 # GitCrumb
 
 Generates a Git activity report from commit history within a time window. Recursively scans a root folder, extracts commits by author, and produces a **Markdown** file with formal structure: header, per-repository tables, and an executive summary. Optionally exports to **PDF**.
